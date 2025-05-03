@@ -1,23 +1,24 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:zaika_ai/res/app_colors.dart';
-import 'package:zaika_ai/test.dart';
+import 'package:zaika_ai/views/add/add_view.dart';
 import 'package:zaika_ai/views/authentication/login_screen.dart';
-import 'package:zaika_ai/views/authentication/phone_auth/otp_screen.dart';
-import 'package:zaika_ai/views/authentication/phone_auth/phone_authentication_screen.dart';
 import 'package:zaika_ai/views/authentication/signup_screen.dart';
-import 'package:zaika_ai/views/dashboard/dashboard_screen.dart';
 import 'package:zaika_ai/views/navigation/navigation_bar_screen.dart';
-import 'package:zaika_ai/views/onboarding/onboarding_screen_one.dart';
-import 'package:zaika_ai/views/onboarding/onboarding_screen_three.dart';
-import 'package:zaika_ai/views/onboarding/onboarding_screen_two.dart';
-import 'package:zaika_ai/views/splash/splash_screen.dart';
+import 'package:zaika_ai/views/profile/profile_screen.dart';
+import 'package:zaika_ai/views/recipes/recipe_ingredients_screen.dart';
+
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,  // Ensure you use the generated Firebase options
+  );
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
           // getPages: AppRoutes.appRoute(),
           // initialRoute: RouteName.notificationScreen,
           // initialRoute: RouteName.splashScreen,
-          home: NavigationScreen(),
+          home: LoginScreen(),
         );
       },
     );

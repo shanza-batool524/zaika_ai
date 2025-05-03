@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "991109441437",
+    "project_id": "zaika-ai",
+    "storage_bucket": "zaika-ai.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991109441437:android:cbf9a0f0b15ca33f423174",
+        "android_client_info": {
+          "package_name": "com.example.zaika_ai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcxsTFnbfSD7DGg7wiRPLKMRtQtXFaGEE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

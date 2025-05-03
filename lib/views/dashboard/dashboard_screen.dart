@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zaika_ai/general_widgets/custom_field_components.dart';
 import 'package:zaika_ai/utils/extension.dart';
 import '../../res/app_colors.dart';
+import '../subscription/subscription_sheet.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -71,7 +72,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showSubscriptionBottomSheet(context);
+                            },
                             icon: Image.asset("assets/icons/search.png"),
                           ),
                         ),
