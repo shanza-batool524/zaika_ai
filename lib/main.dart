@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           // getPages: AppRoutes.appRoute(),
           // initialRoute: RouteName.notificationScreen,
           // initialRoute: RouteName.splashScreen,
-          home: LoginScreen(),
+          home:SignupScreen(),
         );
       },
     );

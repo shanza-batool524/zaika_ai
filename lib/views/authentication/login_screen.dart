@@ -5,6 +5,7 @@ import 'package:zaika_ai/general_widgets/custom_field_components.dart';
 import 'package:zaika_ai/general_widgets/primary_button.dart';
 import 'package:zaika_ai/utils/extension.dart';
 import 'package:zaika_ai/views/authentication/signup_screen.dart'; // Navigate to SignupScreen
+import 'package:zaika_ai/views/dashboard/dashboard_screen.dart'; // Navigate to DashboardScreen
 
 import '../../general_widgets/notch_clipper.dart';
 import '../../res/app_colors.dart';
@@ -39,17 +40,18 @@ class _LoginScreenState extends State<LoginScreen> {
     await _authViewModel.signIn(email, password);
 
     if (_authViewModel.user != null) {
-      // Navigate to the next screen
+      // If the user is successfully logged in, navigate to DashboardScreen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const SignupScreen()), // Update the screen as needed
+        MaterialPageRoute(builder: (context) => const DashboardScreen()), // Navigate to Dashboard
       );
     } else {
-      _showError("Failed to sign in");
+      // If there is any issue, show an error message in Snackbar
+      _showError(_authViewModel.errorMessage.isEmpty ? "Failed to sign in" : _authViewModel.errorMessage);
     }
   }
 
-  // Display error messages
+  // Display error messages in Snackbar
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
@@ -68,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
             left: 0,
             right: 0,
             child: Image.asset(
-              'assets/images/login.png',
+              'assets/images/signup.png',
               fit: BoxFit.fill,
               height: 380,
             ),
