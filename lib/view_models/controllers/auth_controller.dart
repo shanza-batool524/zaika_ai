@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../usecases/usecases.dart';
 
@@ -30,22 +31,41 @@ class AuthController extends GetxController {
     }
   }
 
-  // Phone authentication
-  Future<void> signInWithPhoneCredential(String smsCode, String verificationId) async {
+  // Google Sign-In logic
+  Future<void> signInWithGoogle() async {
     _isLoading.value = true;
     try {
-      final phoneAuthCredential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: smsCode,
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        _errorMessage.value = 'Google sign-in failed or cancelled.';
+        _isLoading.value = false;
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
-      _user.value = await _authUseCase.signInWithPhoneCredential(phoneAuthCredential);
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      _user.value = userCredential.user;
+
       _isLoading.value = false;
       if (_user.value != null) {
-        Get.offNamed('/home');
+        Get.offNamed('/home');  // Navigate to the home page after successful login
       }
     } catch (e) {
       _errorMessage.value = e.toString();
       _isLoading.value = false;
     }
+  }
+
+  // Sign out method (optional)
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    _user.value = null;
   }
 }

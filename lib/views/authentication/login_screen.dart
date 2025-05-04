@@ -24,7 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   // Reference to AuthViewModel (GetX Controller)
-  final AuthViewModel _authViewModel = Get.put(AuthViewModel());
+  //final AuthViewModel _authViewModel = Get.put(AuthViewModel());
+  final AuthViewModel _authViewModel = Get.find<AuthViewModel>();
 
   // Handle user sign in
   Future<void> _signIn() async {

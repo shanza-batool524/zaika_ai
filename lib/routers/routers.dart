@@ -1,12 +1,10 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:zaika_ai/routers/router_names.dart';
-import 'package:zaika_ai/views/authentication/phone_auth/phone_authentication_screen.dart';
 import 'package:zaika_ai/views/dashboard/dashboard_screen.dart';
 
 import '../views/add/add_view.dart';
 import '../views/authentication/login_screen.dart';
 
-import '../views/authentication/phone_auth/otp_screen.dart';
 import '../views/authentication/signup_screen.dart';
 import '../views/onboarding/onboarding_screen_one.dart';
 import '../views/onboarding/onboarding_screen_three.dart';
@@ -31,8 +29,6 @@ class AppRoutes {
     ),
     GetPage(name: RouteName.signupScreen, page: () => const SignupScreen()),
     GetPage(name: RouteName.loginScreen, page: () => const LoginScreen()),
-    GetPage(name: RouteName.phoneAuthenticationScreen, page: () => const PhoneAuthenticationScreen()),
-    GetPage(name: RouteName.otpScreen, page: () => const OtpScreen()),
     GetPage(name: RouteName.dashboardScreen, page: () => const DashboardScreen()),
     GetPage(name: RouteName.addView, page: () =>  AddView()),
     GetPage(name: RouteName.recipeIngredientsScreen, page: () =>  RecipeIngredientsScreen()),

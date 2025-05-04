@@ -58,6 +58,7 @@ dependencies:
   cropperx: ^1.1.1
   native_image_cropper: ^0.6.0
   crop_your_image: ^2.0.0
+  google_sign_in: ^6.3.0
 
 dev_dependencies:
   flutter_test:
