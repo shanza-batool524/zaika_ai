@@ -9,7 +9,8 @@ import '../views/authentication/signup_screen.dart';
 import '../views/onboarding/onboarding_screen_one.dart';
 import '../views/onboarding/onboarding_screen_three.dart';
 import '../views/onboarding/onboarding_screen_two.dart';
-import '../views/recipes/recipe_ingredients_screen.dart';
+import '../views/profile/edit_profile_screen.dart';
+import '../views/recipes/generated_recipe_screen.dart';
 import '../views/splash/splash_screen.dart';
 
 class AppRoutes {
@@ -29,8 +30,15 @@ class AppRoutes {
     ),
     GetPage(name: RouteName.signupScreen, page: () => const SignupScreen()),
     GetPage(name: RouteName.loginScreen, page: () => const LoginScreen()),
-    GetPage(name: RouteName.dashboardScreen, page: () => const DashboardScreen()),
-    GetPage(name: RouteName.addView, page: () =>  AddView()),
-    GetPage(name: RouteName.recipeIngredientsScreen, page: () =>  RecipeIngredientsScreen()),
+    GetPage(
+      name: RouteName.dashboardScreen,
+      page: () => const DashboardScreen(),
+    ),
+    GetPage(name: RouteName.addView, page: () => AddView()),
+    GetPage(
+      name: RouteName.generatedRecipeScreen,
+      page: () => GeneratedRecipeScreen(recipeText: ""),
+    ),
+    GetPage(name: RouteName.editProfileScreen, page: () => EditProfileScreen()),
   ];
 }

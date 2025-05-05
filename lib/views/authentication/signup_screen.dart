@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:zaika_ai/general_widgets/custom_field_components.dart';
 import 'package:zaika_ai/general_widgets/primary_button.dart';
 import 'package:zaika_ai/utils/extension.dart';
 import 'package:zaika_ai/views/authentication/login_screen.dart';
+import 'package:zaika_ai/views/dashboard/dashboard_screen.dart';
 import '../../general_widgets/notch_clipper.dart';
-import '../../res/app_colors.dart';
-import 'package:get/get.dart';
-
 import '../../view_models/auth_viewmodel/auth_view_model.dart';
+import '../../res/app_colors.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -19,15 +18,11 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // Initialize AuthViewModel
-  final AuthViewModel viewModel = Get.find<AuthViewModel>();
+  final AuthViewModel _viewModel = Get.put(AuthViewModel());
 
   Future<void> _signUp() async {
     String email = emailController.text.trim();
@@ -44,26 +39,37 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+    await _viewModel.signUp(email, password);
 
-      if (userCredential.user != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
-      }
-    } catch (e) {
-      _showError(e.toString());
+    if (_viewModel.user != null) {
+      Get.offAll(() => const DashboardScreen());
+    } else {
+      _showError(
+        _viewModel.errorMessage.isEmpty
+            ? "Failed to sign up"
+            : _viewModel.errorMessage.value,
+      );
+    }
+  }
+
+  Future<void> _googleSignUp() async {
+    await _viewModel.signInWithGoogle();
+
+    if (_viewModel.user != null) {
+      Get.offAll(() => const DashboardScreen());
+    } else {
+      _showError(_viewModel.errorMessage.value);
     }
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+    Get.snackbar(
+      "Sign Up Failed",
+      message,
+      backgroundColor: Colors.redAccent,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.all(10),
     );
   }
 
@@ -73,7 +79,6 @@ class _SignupScreenState extends State<SignupScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Scaffold(backgroundColor: Colors.grey[100], body: Container()),
           Positioned(
             top: 0,
             left: 0,
@@ -91,9 +96,9 @@ class _SignupScreenState extends State<SignupScreen> {
             child: ClipPath(
               clipper: NotchedClipper(),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
@@ -150,54 +155,21 @@ class _SignupScreenState extends State<SignupScreen> {
                         20.height,
                         Row(
                           children: [
-                            Expanded(
-                              child: Divider(
-                                color: AppColor.grey,
-                                thickness: 1,
-                              ),
-                            ),
+                            Expanded(child: Divider(color: AppColor.grey, thickness: 1)),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
-                              child: Text(
-                                "Or",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: AppColor.black,
-                                ),
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text("Or", style: TextStyle(fontSize: 14.sp, color: AppColor.black)),
                             ),
-                            Expanded(
-                              child: Divider(
-                                color: AppColor.grey,
-                                thickness: 1,
-                              ),
-                            ),
+                            Expanded(child: Divider(color: AppColor.grey, thickness: 1)),
                           ],
                         ),
                         20.height,
                         PrimaryButton(
-                          onTap: () async {
-                            // Trigger Google Sign-In
-                            await viewModel.signInWithGoogle();
-                            if (viewModel.user != null) {
-                              // Successfully signed in with Google
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => LoginScreen()),
-                              );
-                            } else {
-                              // Show error message if sign-in failed
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(viewModel.errorMessage)),
-                              );
-                            }
-                          },
+                          onTap: _googleSignUp,
                           childWidget: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset("assets/icons/google.png"),
+                              Image.asset("assets/icons/google.png", height: 20),
                               10.width,
                               Text("Continue with Google", style: TextStyle(color: AppColor.white)),
                             ],
@@ -211,19 +183,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           children: [
                             Text(
                               "Already have an account? ",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: AppColor.text,
-                              ),
+                              style: TextStyle(fontSize: 14.sp, color: AppColor.text),
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginScreen(),
-                                  ),
-                                );
+                                Get.to(() => const LoginScreen());
                               },
                               child: Text(
                                 "Login",

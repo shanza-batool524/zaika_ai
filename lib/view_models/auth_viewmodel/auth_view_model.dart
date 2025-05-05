@@ -1,62 +1,62 @@
-import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../controllers/auth_controller.dart';
+import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthViewModel extends GetxController {
-  final _authController = Get.find<AuthController>();  // Use Get.find to access the AuthController
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Rxn<User> user = Rxn<User>();
+  final RxString errorMessage = ''.obs;
 
-  // Observable user
-  Rx<User?> _user = Rx<User?>(null);
-  User? get user => _user.value;
+  @override
+  void onInit() {
+    user.value = _auth.currentUser;
+    super.onInit();
+  }
 
-  // Loading state
-  RxBool _isLoading = false.obs;
-  bool get isLoading => _isLoading.value;
+  Future<void> signUp(String email, String password) async {
+    try {
+      final result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      user.value = result.user;
+      errorMessage.value = '';
+    } catch (e) {
+      errorMessage.value = e.toString();
+    }
+  }
 
-  // Error message
-  RxString _errorMessage = ''.obs;
-  String get errorMessage => _errorMessage.value;
-
-  // Normal sign-in with email and password
   Future<void> signIn(String email, String password) async {
-    _isLoading.value = true;
     try {
-      await _authController.signIn(email, password);
-      _user.value = _authController.user;  // Fetch the signed-in user from AuthController
-      _isLoading.value = false;
-
-      if (_user.value != null) {
-        _errorMessage.value = '';
-      } else {
-        _errorMessage.value = 'Sign-in failed.';
-      }
+      final result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      user.value = result.user;
+      errorMessage.value = '';
     } catch (e) {
-      _errorMessage.value = e.toString();
-      _isLoading.value = false;
+      errorMessage.value = e.toString();
     }
   }
 
-  // Google Sign-In
   Future<void> signInWithGoogle() async {
-    _isLoading.value = true;
     try {
-      // Trigger Google sign-in from AuthController
-      await _authController.signInWithGoogle();
-
-      // After sign-in, update the state based on the user
-      _user.value = _authController.user;
-
-      if (_user.value != null) {
-        _errorMessage.value = '';
-      } else {
-        _errorMessage.value = 'Google sign-in failed.';
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        errorMessage.value = 'Google sign in cancelled';
+        return;
       }
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final result = await _auth.signInWithCredential(credential);
+      user.value = result.user;
+      errorMessage.value = '';
     } catch (e) {
-      _errorMessage.value = e.toString();
-    } finally {
-      _isLoading.value = false;
+      errorMessage.value = e.toString();
     }
   }
 
-// Other existing methods (sign-in with phone authentication, etc.)
+  Future<void> signOut() async {
+    await _auth.signOut();
+    user.value = null;
+  }
 }

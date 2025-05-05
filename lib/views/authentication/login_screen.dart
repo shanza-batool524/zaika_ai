@@ -4,13 +4,11 @@ import 'package:get/get.dart';
 import 'package:zaika_ai/general_widgets/custom_field_components.dart';
 import 'package:zaika_ai/general_widgets/primary_button.dart';
 import 'package:zaika_ai/utils/extension.dart';
-import 'package:zaika_ai/views/authentication/signup_screen.dart'; // Navigate to SignupScreen
-import 'package:zaika_ai/views/dashboard/dashboard_screen.dart'; // Navigate to DashboardScreen
-
+import 'package:zaika_ai/views/authentication/signup_screen.dart';
+import 'package:zaika_ai/views/dashboard/dashboard_screen.dart';
 import '../../general_widgets/notch_clipper.dart';
-import '../../res/app_colors.dart';
-import '../../res/image_urls.dart';
 import '../../view_models/auth_viewmodel/auth_view_model.dart';
+import '../../res/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,11 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // Reference to AuthViewModel (GetX Controller)
-  //final AuthViewModel _authViewModel = Get.put(AuthViewModel());
-  final AuthViewModel _authViewModel = Get.find<AuthViewModel>();
+  final AuthViewModel _authViewModel = Get.put(AuthViewModel());
 
-  // Handle user sign in
   Future<void> _signIn() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
@@ -37,35 +32,46 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Call your sign-in method here
     await _authViewModel.signIn(email, password);
 
     if (_authViewModel.user != null) {
-      // If the user is successfully logged in, navigate to DashboardScreen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardScreen()), // Navigate to Dashboard
-      );
+      Get.offAll(() => const DashboardScreen());
     } else {
-      // If there is any issue, show an error message in Snackbar
-      _showError(_authViewModel.errorMessage.isEmpty ? "Failed to sign in" : _authViewModel.errorMessage);
+      _showError(
+        _authViewModel.errorMessage.isEmpty
+            ? "Failed to sign in"
+            : _authViewModel.errorMessage.value,
+      );
     }
   }
 
-  // Display error messages in Snackbar
+  Future<void> _googleSignIn() async {
+    await _authViewModel.signInWithGoogle();
+
+    if (_authViewModel.user != null) {
+      Get.offAll(() => const DashboardScreen());
+    } else {
+      _showError(_authViewModel.errorMessage.value);
+    }
+  }
+
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+    Get.snackbar(
+      "Login Failed",
+      message,
+      backgroundColor: Colors.redAccent,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.all(10),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Scaffold(backgroundColor: Colors.grey[100], body: Container()),
           Positioned(
             top: 0,
             left: 0,
@@ -87,12 +93,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
                     ),
                   ),
-                  height: 800, // adjust height
+                  height: 800,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -118,26 +124,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         CustomFieldComponents(
                           hint: "Password",
                           controller: passwordController,
-                          obscureText: true,  // Password field
+                          obscureText: true,
                         ),
                         16.height,
-                        // Use Obx or GetX to observe loading state
-                        Obx(() {
-                          return PrimaryButton(
-                            onTap: _signIn, // Handle the sign-in functionality
-                            childWidget: Text(
-                              _authViewModel.isLoading
-                                  ? "Signing In..."
-                                  : "Sign In",
-                              style: TextStyle(
-                                color: AppColor.white,
-                                fontSize: 20,
-                              ),
+                        PrimaryButton(
+                          onTap: _signIn,
+                          childWidget: Text(
+                            "Login",
+                            style: TextStyle(
+                              color: AppColor.white,
+                              fontSize: 20,
                             ),
-                            bgColor: AppColor.black,
-                            gradient: false,
-                          );
-                        }),
+                          ),
+                          bgColor: AppColor.black,
+                          gradient: false,
+                        ),
+                        16.height,
+                        PrimaryButton(
+                          onTap: _googleSignIn,
+                          childWidget: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/icons/google.png", height: 20),
+                              10.width,
+                              Text("Sign in with Google", style: TextStyle(color: AppColor.black)),
+                            ],
+                          ),
+                          bgColor: Colors.white,
+                          gradient: false,
+                        ),
                         20.height,
                         Row(
                           children: [
@@ -171,17 +186,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            socialIcon(ImagesUrls.facebook),
-                            SizedBox(width: 24.w),
-                            socialIcon(ImagesUrls.google),
-                            SizedBox(width: 24.w),
-                            socialIcon(ImagesUrls.apple),
-                          ],
-                        ),
-                        20.height,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
                             Text(
                               "Don't have an account? ",
                               style: TextStyle(
@@ -191,18 +195,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignupScreen(),
-                                  ),
-                                );
+                                Get.to(() => const SignupScreen());
                               },
                               child: Text(
-                                "Register",
+                                "SignUp",
                                 style: TextStyle(
                                   fontSize: 14.sp,
-                                  color: AppColor.orange, // purple color
+                                  color: AppColor.orange,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -220,17 +219,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
-
-Widget socialIcon(String assetPath) {
-  return Container(
-    width: 48.w,
-    height: 48.w,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12.r),
-      border: Border.all(color: AppColor.sec_text),
-    ),
-    child: Center(child: Image.asset(assetPath, width: 24.w, height: 24.h)),
-  );
 }

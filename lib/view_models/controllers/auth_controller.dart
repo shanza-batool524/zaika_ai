@@ -16,22 +16,21 @@ class AuthController extends GetxController {
   var _errorMessage = ''.obs;
   String get errorMessage => _errorMessage.value;
 
-  // Sign in with email/password
   Future<void> signIn(String email, String password) async {
     _isLoading.value = true;
     try {
       _user.value = await _authUseCase.signInWithEmailPassword(email, password);
-      _isLoading.value = false;
       if (_user.value != null) {
         Get.offNamed('/home');
       }
     } catch (e) {
       _errorMessage.value = e.toString();
+      print('Sign in error: $e');
+    } finally {
       _isLoading.value = false;
     }
   }
 
-  // Google Sign-In logic
   Future<void> signInWithGoogle() async {
     _isLoading.value = true;
     try {
@@ -39,33 +38,38 @@ class AuthController extends GetxController {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
-        _errorMessage.value = 'Google sign-in failed or cancelled.';
-        _isLoading.value = false;
+        _errorMessage.value = 'Google sign-in cancelled.';
         return;
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       _user.value = userCredential.user;
 
-      _isLoading.value = false;
       if (_user.value != null) {
-        Get.offNamed('/home');  // Navigate to the home page after successful login
+        Get.offNamed('/home');
       }
     } catch (e) {
       _errorMessage.value = e.toString();
+      print('Google sign-in error: $e');
+    } finally {
       _isLoading.value = false;
     }
   }
 
-  // Sign out method (optional)
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    _user.value = null;
+    try {
+      await FirebaseAuth.instance.signOut();
+      _user.value = null;
+    } catch (e) {
+      _errorMessage.value = e.toString();
+      print('Sign out error: $e');
+    }
   }
 }

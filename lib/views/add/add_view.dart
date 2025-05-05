@@ -1,183 +1,256 @@
-// import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:image_cropper/image_cropper.dart';
 // import 'dart:io';
-// import 'package:permission_handler/permission_handler.dart';
+// import 'dart:ui';
 //
-// class RecipeImageUploader extends StatefulWidget {
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:get/get.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:zaika_ai/general_widgets/custom_field_components.dart';
+// import 'package:zaika_ai/general_widgets/primary_button.dart';
+//
+// import '../../res/app_colors.dart';
+// import 'package:zaika_ai/utils/extension.dart';
+//
+// class AddView extends StatefulWidget {
 //   @override
-//   _RecipeImageUploaderState createState() => _RecipeImageUploaderState();
+//   _AddViewState createState() => _AddViewState();
 // }
 //
-// class _RecipeImageUploaderState extends State<RecipeImageUploader> {
-//   File? _image;
-//   String _caption = '';
-//   int _step = 1;
+// class _AddViewState extends State<AddView> {
+//   TextEditingController nameController = TextEditingController();
+//   File? _selectedImage;
+//   final ImagePicker _picker = ImagePicker();
 //
-//   // Pick image from gallery
-//   Future<void> _pickImage() async {
-//     // Request permissions before accessing the gallery
-//     await _requestPermissions();
+//   void _showImageOptions() {
+//     showModalBottomSheet(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return Container(
+//           padding: const EdgeInsets.all(16.0),
+//           height: 150,
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               ListTile(
+//                 leading: Icon(Icons.camera_alt),
+//                 title: const Text('Capture Image'),
+//                 onTap: () {
+//                   Navigator.of(context).pop();
+//                   _captureImage();
+//                 },
+//               ),
+//               ListTile(
+//                 leading: Icon(Icons.photo_library),
+//                 title: const Text('Choose from Gallery'),
+//                 onTap: () {
+//                   Navigator.of(context).pop();
+//                   _chooseFromGallery();
+//                 },
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
 //
-//     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+//   Future<void> _captureImage() async {
+//     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 //     if (pickedFile != null) {
 //       setState(() {
-//         _image = File(pickedFile.path);
+//         _selectedImage = File(pickedFile.path);
 //       });
-//     } else {
-//       print("No image selected");
 //     }
 //   }
 //
-//   // Request permissions at runtime
-//   Future<void> _requestPermissions() async {
-//     PermissionStatus storageStatus = await Permission.storage.request();
-//     if (storageStatus.isDenied) {
-//       // Handle the case where permission is denied
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Permission to access storage is denied.')),
-//       );
-//     } else {
-//       print("Permission granted for storage");
-//     }
-//   }
-//
-//   // Remove the selected image and go back to step 1
-//   void _removeImage() async {
-//     setState(() {
-//       _image = null;
-//       _step = 1;
-//     });
-//     await _pickImage();
-//   }
-//
-//   // Implement image cropping functionality
-//   Future<void> _editCrop() async {
-//     if (_image != null) {
-//       try {
-//         final croppedFile = await ImageCropper().cropImage(
-//           sourcePath: _image!.path,
-//           uiSettings: [
-//             AndroidUiSettings(
-//               toolbarTitle: 'Crop Image',
-//               toolbarColor: Colors.black,
-//               toolbarWidgetColor: Colors.white,
-//               initAspectRatio: CropAspectRatioPreset.original,
-//               lockAspectRatio: false,
-//             ),
-//             IOSUiSettings(
-//               title: 'Crop Image',
-//               aspectRatioLockEnabled: false,
-//             ),
-//           ],
-//         );
-//
-//         if (croppedFile != null) {
-//           setState(() {
-//             _image = File(croppedFile.path); // Update image after cropping
-//           });
-//           print("Image cropped successfully!");
-//         } else {
-//           print("Crop action cancelled or failed");
-//         }
-//       } catch (e) {
-//         print("Error cropping image: $e");
-//       }
-//     } else {
-//       print("No image selected for cropping");
+//   Future<void> _chooseFromGallery() async {
+//     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+//     if (pickedFile != null) {
+//       setState(() {
+//         _selectedImage = File(pickedFile.path);
+//       });
 //     }
 //   }
 //
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       backgroundColor: const Color(0xFF1E1E2C),
+//       backgroundColor: Colors.white,
 //       appBar: AppBar(
-//         title: Text('New Recipe–Step$_step'),
-//         backgroundColor: Colors.black,
-//         actions: [
-//           if (_step == 1 && _image != null)
-//             TextButton(
-//               onPressed: () => setState(() => _step = 2),
-//               child: const Text("Next", style: TextStyle(color: Colors.white)),
-//             ),
-//         ],
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: _step == 1
-//             ? Column(
-//           children: [
-//             GestureDetector(
-//               onTap: _pickImage,
-//               child: Container(
-//                 width: double.infinity,
-//                 height: 300,
-//                 color: Colors.grey[800],
-//                 child: _image == null
-//                     ? const Center(child: Icon(Icons.add_a_photo, size: 50, color: Colors.white))
-//                     : Image.file(_image!, fit: BoxFit.cover),
-//               ),
-//             ),
-//             const SizedBox(height: 10),
-//             if (_image != null)
-//               TextField(
-//                 style: const TextStyle(color: Colors.white),
-//                 decoration: InputDecoration(
-//                   hintText: "Add a caption...",
-//                   hintStyle: const TextStyle(color: Colors.white54),
-//                   filled: true,
-//                   fillColor: Colors.grey[900],
-//                 ),
-//                 onChanged: (val) => setState(() => _caption = val),
-//               ),
-//           ],
-//         )
-//             : Column(
-//           children: [
-//             if (_image != null)
-//               Container(
-//                 width: double.infinity,
-//                 height: 300,
-//                 child: Image.file(_image!, fit: BoxFit.cover),
-//               ),
-//             const SizedBox(height: 20),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 OutlinedButton.icon(
-//                   onPressed: _editCrop, // Trigger the crop functionality here
-//                   icon: const Icon(Icons.crop, color: Colors.white),
-//                   label: const Text("Edit Crop", style: TextStyle(color: Colors.white)),
-//                   style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.white)),
-//                 ),
-//                 const SizedBox(width: 16),
-//                 OutlinedButton.icon(
-//                   onPressed: _removeImage,
-//                   icon: const Icon(Icons.delete, color: Colors.white),
-//                   label: const Text("Remove", style: TextStyle(color: Colors.white)),
-//                   style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.white)),
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 20),
-//             ElevatedButton.icon(
-//               onPressed: () {
-//                 // Save functionality here
-//                 print("Image saved with caption: $_caption");
-//               },
-//               icon: const Icon(Icons.save),
-//               label: const Text("Save"),
-//             ),
-//           ],
+//         backgroundColor: AppColor.primary,
+//         elevation: 0,
+//         iconTheme: const IconThemeData(color: AppColor.secondary),
+//         centerTitle: true,
+//         surfaceTintColor: Colors.transparent,
+//         automaticallyImplyLeading: false,
+//         leading: IconButton(
+//           onPressed: () => Get.back<void>(),
+//           icon: Image.asset("assets/icons/arrow.png"),
 //         ),
+//         title: Text(
+//           'Enter your recipe name or upload image',
+//           style: TextStyle(
+//             fontSize: 16.sp,
+//             fontWeight: FontWeight.bold,
+//             color: AppColor.black,
+//           ),
+//         ),
+//       ),
+//       body: LayoutBuilder(
+//         builder: (context, constraints) {
+//           return SingleChildScrollView(
+//             child: ConstrainedBox(
+//               constraints: BoxConstraints(minHeight: constraints.maxHeight),
+//               child: Stack(
+//                 children: [
+//                   // 🔹 Background image
+//                   Positioned.fill(
+//                     child: Image.asset(
+//                       'assets/images/add_bg.jpg',
+//                       fit: BoxFit.cover,
+//                     ),
+//                   ),
+//
+//                   // 🔹 Content Overlay
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 16),
+//                     child: Column(
+//                       children: [
+//                         20.height,
+//                         CustomFieldComponents(
+//                           hint: "Enter Your Recipe Name",
+//                           controller: nameController,
+//                         ),
+//                         12.height,
+//                         _selectedImage == null
+//                             ? GestureDetector(
+//                               onTap: _showImageOptions,
+//                               child: ClipRRect(
+//                                 borderRadius: BorderRadius.circular(16),
+//                                 child: BackdropFilter(
+//                                   filter: ImageFilter.blur(
+//                                     sigmaX: 10,
+//                                     sigmaY: 10,
+//                                   ),
+//                                   child: Container(
+//                                     height: 150.h,
+//                                     width: double.infinity,
+//                                     decoration: BoxDecoration(
+//                                       color: Colors.white.withOpacity(0.1),
+//                                       borderRadius: BorderRadius.circular(16),
+//                                       border: Border.all(
+//                                         color: Colors.white.withOpacity(0.3),
+//                                       ),
+//                                     ),
+//                                     child: Padding(
+//                                       padding: const EdgeInsets.all(12),
+//                                       child: Column(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.center,
+//                                         children: const [
+//                                           Text(
+//                                             "Scan your food, unlock the Zaika",
+//                                             textAlign: TextAlign.center,
+//                                             style: TextStyle(
+//                                               fontSize: 18,
+//                                               fontWeight: FontWeight.w500,
+//                                               color: Colors.white,
+//                                             ),
+//                                           ),
+//                                           SizedBox(height: 8),
+//                                           Icon(
+//                                             Icons.arrow_forward,
+//                                             size: 18,
+//                                             color: Colors.white,
+//                                           ),
+//                                         ],
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             )
+//                             : Stack(
+//                               children: [
+//                                 Container(
+//                                   height: 580.h,
+//                                   width: double.infinity,
+//                                   decoration: BoxDecoration(
+//                                     borderRadius: BorderRadius.circular(20),
+//                                     image: DecorationImage(
+//                                       image: FileImage(_selectedImage!),
+//                                       fit: BoxFit.cover,
+//                                     ),
+//                                   ),
+//                                 ),
+//                                 Positioned(
+//                                   bottom: 20,
+//                                   left: 0,
+//                                   right: 0,
+//                                   child: Center(
+//                                     child: ElevatedButton.icon(
+//                                       onPressed: _showImageOptions,
+//                                       icon: const Icon(Icons.upload_file),
+//                                       label: const Text("Change Image"),
+//                                       style: ElevatedButton.styleFrom(
+//                                         backgroundColor: Colors.black
+//                                             .withOpacity(0.7),
+//                                         foregroundColor: Colors.white,
+//                                         padding: const EdgeInsets.symmetric(
+//                                           horizontal: 24,
+//                                           vertical: 12,
+//                                         ),
+//                                         shape: RoundedRectangleBorder(
+//                                           borderRadius: BorderRadius.circular(
+//                                             30,
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
+//                         20.height,
+//                         PrimaryButton(
+//                           onTap: () {
+//                             // handle recipe generation
+//                           },
+//                           childWidget: const Text(
+//                             'Generate Recipe',
+//                             style: TextStyle(color: Colors.white),
+//                           ),
+//                           bgColor: AppColor.black,
+//                           gradient: false,
+//                         ),
+//                         20.height,
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           );
+//         },
 //       ),
 //     );
 //   }
 // }
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:zaika_ai/general_widgets/custom_field_components.dart';
+import 'package:zaika_ai/general_widgets/primary_button.dart';
+import '../../res/app_colors.dart';
+import 'package:zaika_ai/utils/extension.dart';
+
+import '../recipes/generated_recipe_screen.dart';
 
 class AddView extends StatefulWidget {
   @override
@@ -185,104 +258,303 @@ class AddView extends StatefulWidget {
 }
 
 class _AddViewState extends State<AddView> {
-  File? _image;
-  String _caption = '';
-  int _step = 1;
+  TextEditingController nameController = TextEditingController();
+  File? _selectedImage;
+  final ImagePicker _picker = ImagePicker();
 
-  // Pick image from gallery
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  void _showImageOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          height: 150,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: const Text('Capture Image'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _captureImage();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: const Text('Choose from Gallery'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _chooseFromGallery();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _captureImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        _selectedImage = File(pickedFile.path);
       });
     }
   }
 
-  // Remove the selected image and go back to step 1
-  void _removeImage() {
-    setState(() {
-      _image = null;
-      _step = 1;
-    });
+  Future<void> _chooseFromGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String?> getRecipeFromGemini({
+    required String recipeName,
+    File? imageFile,
+  }) async {
+    const apiKey = 'AIzaSyBjXUnSIoe_SzoDAu9s3wXFvb6l8Uw1vj8';
+
+    late final Uri url;
+    late final Map<String, dynamic> body;
+
+    if (imageFile != null) {
+      url = Uri.parse(
+        'https://generativelanguage.googleapis.com/v1/models/gemini-pro-vision:generateContent?key=$apiKey',
+      );
+
+      final bytes = await imageFile.readAsBytes();
+      final base64Image = base64Encode(bytes);
+
+      body = {
+        "contents": [
+          {
+            "parts": [
+              {
+                "text":
+                    "You are a world-class professional chef with expertise in all global cuisines. You must act like a real chef, not an AI. I have uploaded an image of a dish — please identify it and provide a highly detailed, step-by-step recipe.Always begin by warmly greeting me with: “Welcome to Zaika.AI! I’m your personal chef today.” Then describe the dish vividly — including its flavor, aroma, and traditional context if applicable. After that, give a clear, organized recipe including ingredients (with exact measurements), preparation steps, cooking time, and pro tips to enhance taste.Explain every step simply and precisely, assuming I’m cooking this for the first time. Mention tools needed, suggest alternatives for rare ingredients, and provide plating suggestions. You can give tips for storing leftovers and variations in case of dietary needs (like vegan, gluten-free).Do not say you're an AI. You are a passionate and professional chef helping me cook an amazing meal at home. Make it fun, supportive, and authentic. Never leave out small details, and don’t assume I know anything unless I ask for a simplifiedversion.",
+              },
+              {
+                "inlineData": {
+                  "mimeType": "image/jpeg",
+                  "data": base64Image,
+                }
+              }
+            ]
+          }
+        ]
+      };
+    } else {
+      url = Uri.parse(
+        'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=$apiKey',
+      );
+
+      body = {
+        "contents": [
+          {
+            "parts": [
+              {
+                "text":
+                "You're an expert chef. Given the recipe name '$recipeName', generate a detailed recipe with ingredients, preparation steps, and cooking instructions."
+              },
+            ]
+          }
+        ]
+      };
+    }
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final response = await http.post(url, headers: headers, body: jsonEncode(body));
+    print("response is ${response.body}");
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return json['candidates'][0]['content']['parts'][0]['text'];
+    } else {
+      print("API Error: ${response.body}");
+      return null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1E2C),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('New Recipe–Step$_step'),
-        backgroundColor: Colors.black,
-        actions: [
-          if (_step == 1 && _image != null)
-            TextButton(
-              onPressed: () => setState(() => _step = 2),
-              child: const Text("Next", style: TextStyle(color: Colors.white)),
-            ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _step == 1
-            ? Column(
-          children: [
-            GestureDetector(
-              onTap: _pickImage,
-              child: Container(
-                width: double.infinity,
-                height: 300,
-                color: Colors.grey[800],
-                child: _image == null
-                    ? const Center(child: Icon(Icons.add_a_photo, size: 50, color: Colors.white))
-                    : Image.file(_image!, fit: BoxFit.cover),
-              ),
-            ),
-            const SizedBox(height: 10),
-            if (_image != null)
-              TextField(
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: "Add a caption...",
-                  hintStyle: const TextStyle(color: Colors.white54),
-                  filled: true,
-                  fillColor: Colors.grey[900],
-                ),
-                onChanged: (val) => setState(() => _caption = val),
-              ),
-          ],
-        )
-            : Column(
-          children: [
-            if (_image != null)
-              Container(
-                width: double.infinity,
-                height: 300,
-                child: Image.file(_image!, fit: BoxFit.cover),
-              ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OutlinedButton.icon(
-                  onPressed: _removeImage,
-                  icon: const Icon(Icons.delete, color: Colors.white),
-                  label: const Text("Remove", style: TextStyle(color: Colors.white)),
-                  style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.white)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () {
-                // Save functionality here
-                print("Image saved with caption: $_caption");
-              },
-              icon: const Icon(Icons.save),
-              label: const Text("Save"),
-            ),
-          ],
+        backgroundColor: AppColor.primary,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppColor.secondary),
+        centerTitle: true,
+        surfaceTintColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () => Get.back<void>(),
+          icon: Image.asset("assets/icons/arrow.png"),
         ),
+        title: Text(
+          'Enter your recipe name or upload image',
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColor.black,
+          ),
+        ),
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Image.asset(
+                      'assets/images/add_bg.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        20.height,
+                        CustomFieldComponents(
+                          hint: "Enter Your Recipe Name",
+                          controller: nameController,
+                        ),
+                        12.height,
+                        _selectedImage == null
+                            ? GestureDetector(
+                          onTap: _showImageOptions,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                              child: Container(
+                                height: 150.h,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.3),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        "Scan your food, unlock the Zaika",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        size: 18,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                            : Stack(
+                          children: [
+                            Container(
+                              height: 580.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                image: DecorationImage(
+                                  image: FileImage(_selectedImage!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 20,
+                              left: 0,
+                              right: 0,
+                              child: Center(
+                                child: ElevatedButton.icon(
+                                  onPressed: _showImageOptions,
+                                  icon: const Icon(Icons.upload_file),
+                                  label: const Text("Change Image"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black.withOpacity(0.7),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        20.height,
+                        PrimaryButton(
+                          onTap: () async {
+                            if (nameController.text.isEmpty && _selectedImage == null) {
+                              Get.snackbar('Error', 'Please enter a recipe name or upload an image.');
+                              return;
+                            }
+
+                            Get.dialog(
+                              const Center(child: CircularProgressIndicator()),
+                              barrierDismissible: false,
+                            );
+
+                            final result = await getRecipeFromGemini(
+                              recipeName: nameController.text,
+                              imageFile: _selectedImage,
+                            );
+
+                            Get.back(); // close loading dialog
+
+                            if (result != null) {
+                              Get.to(() => GeneratedRecipeScreen(recipeText: result));
+                            } else {
+                              Get.snackbar('Error', 'Failed to generate recipe. Please try again.');
+                            }
+                          },
+
+                          childWidget: const Text(
+                            'Generate Recipe',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          bgColor: AppColor.black,
+                          gradient: false,
+                        ),
+                        20.height,
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
