@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 Future<String?> getRecipeFromGemini({
   required String recipeName,
-  File? imageFile, // now optional
+  File? imageFile,
 }) async {
   const apiKey = 'AIzaSyBjXUnSIoe_SzoDAu9s3wXFvb6l8Uw1vj8';
 

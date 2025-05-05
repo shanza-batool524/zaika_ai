@@ -268,12 +268,27 @@ class _AddViewState extends State<AddView> {
       builder: (BuildContext context) {
         return Container(
           padding: const EdgeInsets.all(16.0),
-          height: 150,
+          height: 155.h,
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.r),
+              topRight: Radius.circular(20.r),
+            ),
+          ),
+
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.camera_alt),
+                leading: SizedBox(
+                  height: 30.h,
+                  width: 30.w,
+                  child: Image.asset(
+                    "assets/icons/camera.png",
+                    fit: BoxFit.contain,
+                  ),
+                ),
                 title: const Text('Capture Image'),
                 onTap: () {
                   Navigator.of(context).pop();
@@ -281,7 +296,15 @@ class _AddViewState extends State<AddView> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_library),
+                leading: SizedBox(
+                  height: 30.h,
+                  width: 30.w,
+                  child: Image.asset(
+                    "assets/icons/gallery.png",
+                    fit: BoxFit.contain,
+                  ),
+                ),
+
                 title: const Text('Choose from Gallery'),
                 onTap: () {
                   Navigator.of(context).pop();
@@ -339,14 +362,11 @@ class _AddViewState extends State<AddView> {
                     "You are a world-class professional chef with expertise in all global cuisines. You must act like a real chef, not an AI. I have uploaded an image of a dish — please identify it and provide a highly detailed, step-by-step recipe.Always begin by warmly greeting me with: “Welcome to Zaika.AI! I’m your personal chef today.” Then describe the dish vividly — including its flavor, aroma, and traditional context if applicable. After that, give a clear, organized recipe including ingredients (with exact measurements), preparation steps, cooking time, and pro tips to enhance taste.Explain every step simply and precisely, assuming I’m cooking this for the first time. Mention tools needed, suggest alternatives for rare ingredients, and provide plating suggestions. You can give tips for storing leftovers and variations in case of dietary needs (like vegan, gluten-free).Do not say you're an AI. You are a passionate and professional chef helping me cook an amazing meal at home. Make it fun, supportive, and authentic. Never leave out small details, and don’t assume I know anything unless I ask for a simplifiedversion.",
               },
               {
-                "inlineData": {
-                  "mimeType": "image/jpeg",
-                  "data": base64Image,
-                }
-              }
-            ]
-          }
-        ]
+                "inlineData": {"mimeType": "image/jpeg", "data": base64Image},
+              },
+            ],
+          },
+        ],
       };
     } else {
       url = Uri.parse(
@@ -359,26 +379,26 @@ class _AddViewState extends State<AddView> {
             "parts": [
               {
                 "text":
-                "You're an expert chef. Given the recipe name '$recipeName', generate a detailed recipe with ingredients, preparation steps, and cooking instructions."
+                    "You are a world-class professional chef with expertise in all global cuisines. You must act like a real chef, not an AI. I have uploaded an image of a dish — please identify it and provide a highly detailed, step-by-step recipe.Always begin by warmly greeting me with: “Welcome to Zaika.AI! I’m your personal chef today.” Then describe the dish vividly — including its flavor, aroma, and traditional context if applicable. After that, give a clear, organized recipe including ingredients (with exact measurements), preparation steps, cooking time, and pro tips to enhance taste.Explain every step simply and precisely, assuming I’m cooking this for the first time. Mention tools needed, suggest alternatives for rare ingredients, and provide plating suggestions. You can give tips for storing leftovers and variations in case of dietary needs (like vegan, gluten-free).Do not say you're an AI. You are a passionate and professional chef helping me cook an amazing meal at home. Make it fun, supportive, and authentic. Never leave out small details, and don’t assume I know anything unless I ask for a simplified version.",
               },
-            ]
-          }
-        ]
+            ],
+          },
+        ],
       };
     }
 
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+    final headers = {'Content-Type': 'application/json'};
 
-    final response = await http.post(url, headers: headers, body: jsonEncode(body));
-    print("response is ${response.body}");
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       return json['candidates'][0]['content']['parts'][0]['text'];
     } else {
-      print("API Error: ${response.body}");
       return null;
     }
   }
@@ -432,91 +452,102 @@ class _AddViewState extends State<AddView> {
                         12.height,
                         _selectedImage == null
                             ? GestureDetector(
-                          onTap: _showImageOptions,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              child: Container(
-                                height: 150.h,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.3),
+                              onTap: _showImageOptions,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                    sigmaX: 10,
+                                    sigmaY: 10,
+                                  ),
+                                  child: Container(
+                                    height: 150.h,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.3),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Text(
+                                            "Scan your food, unlock the Zaika",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 18.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColor.white,
+                                            ),
+                                          ),
+                                          8.height,
+                                          Icon(
+                                            Icons.arrow_forward,
+                                            size: 18,
+                                            color: AppColor.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        "Scan your food, unlock the Zaika",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white,
+                              ),
+                            )
+                            : Stack(
+                              children: [
+                                Container(
+                                  height: 580.h,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    image: DecorationImage(
+                                      image: FileImage(_selectedImage!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 20,
+                                  left: 0,
+                                  right: 0,
+                                  child: Center(
+                                    child: ElevatedButton.icon(
+                                      onPressed: _showImageOptions,
+                                      icon: const Icon(Icons.upload_file),
+                                      label: const Text("Change Image"),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.black
+                                            .withOpacity(0.7),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            30,
+                                          ),
                                         ),
                                       ),
-                                      SizedBox(height: 8),
-                                      Icon(
-                                        Icons.arrow_forward,
-                                        size: 18,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                            : Stack(
-                          children: [
-                            Container(
-                              height: 580.h,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                image: DecorationImage(
-                                  image: FileImage(_selectedImage!),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 20,
-                              left: 0,
-                              right: 0,
-                              child: Center(
-                                child: ElevatedButton.icon(
-                                  onPressed: _showImageOptions,
-                                  icon: const Icon(Icons.upload_file),
-                                  label: const Text("Change Image"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.black.withOpacity(0.7),
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 24,
-                                      vertical: 12,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
                         20.height,
                         PrimaryButton(
                           onTap: () async {
-                            if (nameController.text.isEmpty && _selectedImage == null) {
-                              Get.snackbar('Error', 'Please enter a recipe name or upload an image.');
+                            if (nameController.text.isEmpty &&
+                                _selectedImage == null) {
+                              Get.snackbar(
+                                'Error',
+                                'Please enter a recipe name or upload an image.',
+                              );
                               return;
                             }
 
@@ -533,15 +564,20 @@ class _AddViewState extends State<AddView> {
                             Get.back(); // close loading dialog
 
                             if (result != null) {
-                              Get.to(() => GeneratedRecipeScreen(recipeText: result));
+                              Get.to(
+                                () => GeneratedRecipeScreen(recipeText: result),
+                              );
                             } else {
-                              Get.snackbar('Error', 'Failed to generate recipe. Please try again.');
+                              Get.snackbar(
+                                'Error',
+                                'Failed to generate recipe. Please try again.',
+                              );
                             }
                           },
 
                           childWidget: const Text(
                             'Generate Recipe',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: AppColor.white),
                           ),
                           bgColor: AppColor.black,
                           gradient: false,

@@ -59,8 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
     Get.snackbar(
       "Login Failed",
       message,
-      backgroundColor: Colors.redAccent,
-      colorText: Colors.white,
+      backgroundColor: AppColor.white,
+      colorText: AppColor.white,
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.all(10),
     );
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.white,
       body: Stack(
         children: [
           Positioned(
@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Image.asset(
               'assets/images/signup.png',
               fit: BoxFit.fill,
-              height: 380,
+              height: 380.h,
             ),
           ),
           Positioned(
@@ -92,13 +92,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10.r),
+                      topRight: Radius.circular(10.r),
                     ),
                   ),
-                  height: 800,
+                  height: 800.h,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             "Login",
                             style: TextStyle(
                               color: AppColor.white,
-                              fontSize: 20,
+                              fontSize: 20.sp,
                             ),
                           ),
                           bgColor: AppColor.black,
@@ -145,12 +145,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           childWidget: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset("assets/icons/google.png", height: 20),
+                              Image.asset(
+                                "assets/icons/google.png",
+                                height: 20.h,
+                              ),
                               10.width,
-                              Text("Sign in with Google", style: TextStyle(color: AppColor.black)),
+                              Text(
+                                "Sign in with Google",
+                                style: TextStyle(color: AppColor.black),
+                              ),
                             ],
                           ),
-                          bgColor: Colors.white,
+                          bgColor: AppColor.white,
                           gradient: false,
                         ),
                         20.height,
