@@ -76,7 +76,8 @@ class _OnboardingScreenTwoState extends State<OnboardingScreenTwo> with TickerPr
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffFF6339),
+        // backgroundColor: const Color(0xffFF6339),
+        backgroundColor: const Color(0xffFA812F),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -84,32 +85,32 @@ class _OnboardingScreenTwoState extends State<OnboardingScreenTwo> with TickerPr
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                40.height,
+                20.height,
                 SlideTransition(
                   position: _animation1,
                   child: Image.asset(
                     "assets/onboarding/4.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
+                20.height,
                 SlideTransition(
                   position: _animation2,
                   child: Image.asset(
                     "assets/onboarding/5.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
+                20.height,
                 SlideTransition(
                   position: _animation3,
                   child: Image.asset(
                     "assets/onboarding/6.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
-               Text("Your personal guide to be a chef",style: TextStyle(fontSize: 35.sp,fontWeight: FontWeight.w700),),
+                20.height,
+               Text("Your personal guide to be a chef",style: TextStyle(color:AppColor.white,fontSize: 35.sp,fontWeight: FontWeight.w700),),
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(

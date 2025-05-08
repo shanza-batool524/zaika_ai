@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:zaika_ai/routers/router_names.dart';
 import 'package:zaika_ai/utils/extension.dart';
 import '../../res/app_colors.dart';
 
@@ -34,7 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFCEAE9),
+      backgroundColor: AppColor.white,
       body: Stack(
         children: [
           Positioned.fill(
@@ -51,34 +54,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   280.height,
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.4),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Hello Buddy!!",
-                      style: TextStyle(fontSize: 18, color: AppColor.white,fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        color: AppColor.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   20.height,
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Container(
-                         height:  150.h,
+                          height: 150.h,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white.withOpacity(0.3)),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                            ),
                           ),
                           child: InkWell(
-                            onTap: () {},
-                            borderRadius: BorderRadius.circular(16),
+                            onTap: () {
+                              Get.toNamed(RouteName.addView);
+                            },
+                            borderRadius: BorderRadius.circular(16.r),
                             child: Padding(
                               padding: const EdgeInsets.all(12),
                               child: Column(
@@ -87,14 +101,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Text(
                                     "GET YOUR AI POWERED RECIPE NOW",
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 18,
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.white,
+                                      color: AppColor.white,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
-                                  const Icon(Icons.arrow_forward, size: 18, color: Colors.white),
+                                  8.height,
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    size: 18,
+                                    color: AppColor.white,
+                                  ),
                                 ],
                               ),
                             ),
@@ -106,18 +124,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child:GridView.count(
+                    child: GridView.count(
                       crossAxisCount: 2,
                       shrinkWrap: true,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
                       physics: const NeverScrollableScrollPhysics(),
                       children: const [
-                        RecipeCard(title: "Explore Nutritions", imagePath: 'assets/icons/nutrition.png'),
-                        RecipeCard(title: 'Workouts', imagePath: 'assets/icons/workout.png'),
+                        RecipeCard(
+                          title: "Explore Nutritions",
+                          imagePath: 'assets/icons/nutrition.png',
+                        ),
+                        RecipeCard(
+                          title: 'Workouts',
+                          imagePath: 'assets/icons/workout.png',
+                        ),
                       ],
                     ),
-
                   ),
                   20.height,
                   Padding(
@@ -128,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         "Popular Recipes",
                         style: TextStyle(
                           color: AppColor.white,
-                          fontSize: 30,
+                          fontSize: 30.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -160,20 +183,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     top: 8,
                                     left: 8,
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 4,
+                                      ),
                                       decoration: BoxDecoration(
                                         color: Colors.black54,
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(
+                                          12.r,
+                                        ),
                                       ),
                                       child: Row(
                                         children: [
-                                          const Icon(Icons.star_border, color: Colors.white, size: 16),
-                                          const SizedBox(width: 4),
+                                          const Icon(
+                                            Icons.star_border,
+                                            color: AppColor.white,
+                                            size: 16,
+                                          ),
+                                          4.width,
                                           Text(
                                             item.rating.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
+                                            style: TextStyle(
+                                              color: AppColor.white,
+                                              fontSize: 14.sp,
                                             ),
                                           ),
                                         ],
@@ -190,14 +222,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         gradient: LinearGradient(
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
-                                          colors: [Colors.transparent, Colors.black87],
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.black87,
+                                          ],
                                         ),
                                       ),
                                       child: Text(
                                         item.caption,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
+                                        style: TextStyle(
+                                          color: AppColor.white,
+                                          fontSize: 16.sp,
                                           fontWeight: FontWeight.w500,
                                           height: 1.3,
                                         ),
@@ -223,32 +258,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-
 class RecipeCard extends StatelessWidget {
   final String title;
   final String imagePath;
 
-  const RecipeCard({
-    super.key,
-    required this.title,
-    required this.imagePath,
-  });
+  const RecipeCard({super.key, required this.title, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(16.r),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1), // or try 0.5 for more solid look
-            borderRadius: BorderRadius.circular(16),
+            color: Colors.white.withOpacity(0.1),
+            // or try 0.5 for more solid look
+            borderRadius: BorderRadius.circular(16.r),
             border: Border.all(color: Colors.white.withOpacity(0.3)),
           ),
           child: InkWell(
-            onTap: () {}, // Add navigation or action
-            borderRadius: BorderRadius.circular(16),
+            onTap: () {},
+            borderRadius: BorderRadius.circular(16.r),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -256,22 +287,26 @@ class RecipeCard extends StatelessWidget {
                 children: [
                   Image.asset(
                     imagePath,
-                    height: 40,
-                    width: 40,
+                    height: 40.h,
+                    width: 40.w,
                     fit: BoxFit.contain,
                   ),
-                  const SizedBox(height: 12),
+                  12.height,
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: TextStyle(
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white, // Optional: white text on glass
+                      color: AppColor.white,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  const Icon(Icons.arrow_forward, size: 18, color: Colors.white),
+                  8.height,
+                  const Icon(
+                    Icons.arrow_forward,
+                    size: 18,
+                    color: Colors.white,
+                  ),
                 ],
               ),
             ),
@@ -281,8 +316,6 @@ class RecipeCard extends StatelessWidget {
     );
   }
 }
-
-
 
 class RecipeItem {
   final String imagePath;

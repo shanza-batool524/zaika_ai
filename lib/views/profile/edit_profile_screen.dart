@@ -80,8 +80,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         'email': _auth.currentUser?.email,
       }, SetOptions(merge: true));
 
-      Get.snackbar("Success", "Profile updated",
-          backgroundColor: Colors.green, colorText: Colors.white);
+      // Show Snackbar using ScaffoldMessenger
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile updated successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        // Navigate back after short delay
+        await Future.delayed(const Duration(milliseconds: 800));
+        Navigator.pop(context);
+      }
     } catch (e) {
       Get.snackbar("Error", "Failed to update profile: $e",
           backgroundColor: Colors.red, colorText: Colors.white);
@@ -119,7 +129,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             // Profile Picture
             CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/images/signup.png'),
+              backgroundImage: AssetImage('assets/images/avatar.jpg'),
             ),
             20.height,
             // Name
@@ -132,29 +142,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
             ),
-            10.height,
-            // Username
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(
-                hintText: 'Enter your username',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-            10.height,
-            // Bio
-            TextField(
-              controller: bioController,
-              decoration: InputDecoration(
-                hintText: 'Tell us about yourself',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              maxLines: 4,
-            ),
+            // 10.height,
+            // // Username
+            // TextField(
+            //   controller: usernameController,
+            //   decoration: InputDecoration(
+            //     hintText: 'Enter your username',
+            //     border: OutlineInputBorder(
+            //       borderRadius: BorderRadius.circular(20),
+            //     ),
+            //   ),
+            // ),
+            // 10.height,
+            // // Bio
+            // TextField(
+            //   controller: bioController,
+            //   decoration: InputDecoration(
+            //     hintText: 'Tell us about yourself',
+            //     border: OutlineInputBorder(
+            //       borderRadius: BorderRadius.circular(20),
+            //     ),
+            //   ),
+            //   maxLines: 4,
+            // ),
             const Spacer(),
             PrimaryButton(
               onTap: saveProfile,

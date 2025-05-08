@@ -2,6 +2,7 @@ class RouteName {
   static const String splashScreen = '/';
 
   static const String onBoardingScreenOne = '/onBoardingScreenOne';
+  static const String navigationScreen = '/navigationScreen';
   static const String onBoardingScreenTwo = '/onBoardingScreenTwo';
   static const String onBoardingScreenThree = '/onBoardingScreenThree';
   static const String loginScreen = '/loginScreen';
@@ -10,4 +11,6 @@ class RouteName {
   static const String addView = '/addView';
   static const String generatedRecipeScreen = '/generatedRecipeScreen';
   static const String editProfileScreen = '/editProfileScreen';
+  static const String aboutScreen = '/aboutScreen';
+  static const String privacyPolicyScreen = '/privacyPolicyScreen';
 }

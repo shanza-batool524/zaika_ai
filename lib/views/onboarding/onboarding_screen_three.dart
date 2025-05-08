@@ -84,31 +84,31 @@ class _OnboardingScreenThreeState extends State<OnboardingScreenThree> with Tick
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                40.height,
+                20.height,
                 SlideTransition(
                   position: _animation1,
                   child: Image.asset(
                     "assets/onboarding/7.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
+                20.height,
                 SlideTransition(
                   position: _animation2,
                   child: Image.asset(
                     "assets/onboarding/8.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
+                20.height,
                 SlideTransition(
                   position: _animation3,
                   child: Image.asset(
                     "assets/onboarding/9.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
+                20.height,
                 Text("Make your kitchen full of Zaika...",style: TextStyle(fontSize: 35.sp,fontWeight: FontWeight.w700),),
                 Align(
                   alignment: Alignment.centerRight,

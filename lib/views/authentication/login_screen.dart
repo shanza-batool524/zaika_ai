@@ -6,6 +6,7 @@ import 'package:zaika_ai/general_widgets/primary_button.dart';
 import 'package:zaika_ai/utils/extension.dart';
 import 'package:zaika_ai/views/authentication/signup_screen.dart';
 import 'package:zaika_ai/views/dashboard/dashboard_screen.dart';
+import 'package:zaika_ai/views/navigation/navigation_bar_screen.dart';
 import '../../general_widgets/notch_clipper.dart';
 import '../../view_models/auth_viewmodel/auth_view_model.dart';
 import '../../res/app_colors.dart';
@@ -35,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await _authViewModel.signIn(email, password);
 
     if (_authViewModel.user != null) {
-      Get.offAll(() => const DashboardScreen());
+      Get.offAll(() => const NavigationScreen());
     } else {
       _showError(
         _authViewModel.errorMessage.isEmpty
@@ -111,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           "Login",
                           style: TextStyle(
                             color: AppColor.brown,
-                            fontSize: 40,
+                            fontSize: 40.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -119,12 +120,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         CustomFieldComponents(
                           hint: "Email",
                           controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                         ),
                         8.height,
                         CustomFieldComponents(
                           hint: "Password",
                           controller: passwordController,
                           obscureText: true,
+                          keyboardType: TextInputType.visiblePassword,
                         ),
                         16.height,
                         PrimaryButton(
@@ -140,26 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           gradient: false,
                         ),
                         16.height,
-                        PrimaryButton(
-                          onTap: _googleSignIn,
-                          childWidget: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "assets/icons/google.png",
-                                height: 20.h,
-                              ),
-                              10.width,
-                              Text(
-                                "Sign in with Google",
-                                style: TextStyle(color: AppColor.black),
-                              ),
-                            ],
-                          ),
-                          bgColor: AppColor.white,
-                          gradient: false,
-                        ),
-                        20.height,
                         Row(
                           children: [
                             Expanded(
@@ -189,6 +172,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                         20.height,
+                        PrimaryButton(
+                          onTap: _googleSignIn,
+                          childWidget: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/icons/google.png",
+                                height: 20.h,
+                              ),
+                              10.width,
+                              Text(
+                                "Sign in with Google",
+                                style: TextStyle(color: AppColor.white),
+                              ),
+                            ],
+                          ),
+                          bgColor: AppColor.black,
+                          gradient: false,
+                        ),
+                        20.height,
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

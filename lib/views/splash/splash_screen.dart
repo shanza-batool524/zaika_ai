@@ -64,10 +64,14 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:zaika_ai/views/navigation/navigation_bar_screen.dart';
 import 'package:zaika_ai/views/onboarding/onboarding_screen_one.dart';
 import 'package:zaika_ai/views/dashboard/dashboard_screen.dart';  // Import Dashboard Screen
 
 import '../../res/app_colors.dart';
+import '../../routers/router_names.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -105,15 +109,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardScreen()),
-      );
+      Get.offAllNamed(RouteName.navigationScreen);
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreenOne()),
-      );
+      Get.offAllNamed(RouteName.onBoardingScreenOne);
     }
   }
 

@@ -475,7 +475,7 @@ class _AddViewState extends State<AddView> {
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
                                             "Scan your food, unlock the Zaika",
                                             textAlign: TextAlign.center,

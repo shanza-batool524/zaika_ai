@@ -84,32 +84,32 @@ class _OnboardingScreenOneState extends State<OnboardingScreenOne> with TickerPr
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                40.height,
+                20.height,
                 SlideTransition(
                   position: _animation1,
                   child: Image.asset(
                     "assets/onboarding/1.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
+                20.height,
                 SlideTransition(
                   position: _animation2,
                   child: Image.asset(
                     "assets/onboarding/2.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
+                20.height,
                 SlideTransition(
                   position: _animation3,
                   child: Image.asset(
                     "assets/onboarding/3.png",
-                    height: 180,
+                    height: 180.h,
                   ),
                 ),
-                30.height,
-                Text("Share the love, Share the recipe",style: TextStyle(fontSize: 35.sp,fontWeight: FontWeight.w700),),
+                20.height,
+                Text("Share the love, Share the recipe",style: TextStyle(color:AppColor.white,fontSize: 35.sp,fontWeight: FontWeight.w700),),
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
